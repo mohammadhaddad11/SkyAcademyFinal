@@ -1,0 +1,107 @@
+<div class="my-5 sec4 mx-5">
+  <div class="vacation-header d-flex justify-content-between">
+    <div class="d-flex align-items-end">
+      <img src="assets/img/check.png" alt="avatar" />
+      <h5>Vacation Requests</h5>
+    </div>
+
+    <div class="input-group d-flex justify-content-between">
+      <span class="input-group-text"
+        ><fa-icon [icon]="MagnifyingGlass"></fa-icon
+      ></span>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search..."
+        [(ngModel)]="searchTerm"
+        id="search-input"
+      />
+    </div>
+  </div>
+  <br />
+
+  <div class="d-flex justify-content-between">
+    <div class="select-all-container">
+      <input type="checkbox" id="select-all" (click)="toggleSelectAll()" />
+      <label for="select-all">Select All</label>
+    </div>
+    <a href="#"><i style="font-size: 40px" class="fa-solid fa-filter"></i></a>
+  </div>
+
+  <!-- Display current page here -->
+  <div class="text-center my-3">
+    <p>Current Page: {{ currentPage }}</p>
+    <!-- Interpolation works here -->
+  </div>
+
+  <!-- Vacation Requests List -->
+  <div id="page-content" class="row mt-5">
+    <div class="col-md-4" *ngFor="let item of filteredData(); let i = index">
+      <div class="card" [class.selected]="selectedItems.has(item.name)">
+        <div class="d-flex flex-column">
+          <div class="id d-flex align-items-center flex-column">
+            <img src="assets/img/avatar.png" alt="avatar" class="mb-1" />
+            <h4
+              class="name"
+              [innerHTML]="item.name | highlight : searchTerm"
+            ></h4>
+
+            <!-- Interpolation -->
+          </div>
+          <div class="cardinfo">
+            <div class="info ms-4">
+              <div class="mb-2">
+                <p class="header">Submitted on:</p>
+                <p>{{ item.date }}</p>
+                <!-- Interpolation -->
+              </div>
+              <div>
+                <p class="header">Duration:</p>
+                <p>{{ item.duration }}</p>
+                <!-- Interpolation -->
+              </div>
+              <div class="mt-2">
+                <p class="header">Salary:</p>
+                <p>{{ item.salary }}</p>
+                <!-- Interpolation -->
+              </div>
+            </div>
+            <div
+              class="buttons d-flex flex-column-reverse justify-content-between mt-3 mx-4"
+            >
+              <!-- Property binding to disable button if salary is 0 AED -->
+              <button
+                class="btn btn-decline"
+                (click)="handleDecline(item.name)"
+              >
+                Decline
+              </button>
+              <button
+                class="btn btn-approve text-white"
+                [disabled]="item.salary === '0 AED'"
+                (click)="handleApprove(item.name)"
+              >
+                Approve
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-navigation">
+    <nav>
+      <ul id="pagination" class="pagination">
+        <li
+          *ngFor="let page of [].constructor(totalPages); let p = index"
+          class="page-item"
+        >
+          <a href="#" class="page-link" (click)="loadPage(p + 1)">{{
+            p + 1
+          }}</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
