@@ -1,4 +1,4 @@
-<div class="my-5 sec4 mx-5">
+<div class="my-5 sec4 mx-5 request">
   <div class="vacation-header d-flex justify-content-between">
     <div class="d-flex align-items-end">
       <img src="assets/img/check.png" alt="avatar" />
@@ -6,15 +6,14 @@
     </div>
 
     <div class="input-group d-flex justify-content-between">
-      <span class="input-group-text"
-        ><fa-icon [icon]="MagnifyingGlass"></fa-icon
-      ></span>
+      <span class="input-group-text">
+        <fa-icon [icon]="MagnifyingGlass"></fa-icon>
+      </span>
       <input
         type="text"
         class="form-control"
         placeholder="Search..."
         [(ngModel)]="searchTerm"
-        id="search-input"
       />
     </div>
   </div>
@@ -25,51 +24,56 @@
       <input type="checkbox" id="select-all" (click)="toggleSelectAll()" />
       <label for="select-all">Select All</label>
     </div>
-    <a href="#"><i style="font-size: 40px" class="fa-solid fa-filter"></i></a>
+    <a href="#">
+      <i style="font-size: 40px" class="fa-solid fa-filter"></i>
+    </a>
   </div>
 
-  <!-- Display current page here -->
-  <div class="text-center my-3">
-    <p>Current Page: {{ currentPage }}</p>
-    <!-- Interpolation works here -->
-  </div>
-
-  <!-- Vacation Requests List -->
   <div id="page-content" class="row mt-5">
-    <div class="col-md-4" *ngFor="let item of filteredData(); let i = index">
-      <div class="card" [class.selected]="selectedItems.has(item.name)">
+    <div
+      *ngFor="
+        let item of filteredData()
+          | slice
+            : (currentPage - 1) * itemsPerPage
+            : currentPage * itemsPerPage
+      "
+      class="col-md-4 mb-4"
+    >
+      <div
+        class="card"
+        [ngClass]="{ 'selected-card': selectedItems.has(item.name) }"
+      >
         <div class="d-flex flex-column">
           <div class="id d-flex align-items-center flex-column">
             <img src="assets/img/avatar.png" alt="avatar" class="mb-1" />
-            <h4
-              class="name"
-              [innerHTML]="item.name | highlight : searchTerm"
-            ></h4>
-
-            <!-- Interpolation -->
+            <h4 [innerHTML]="item.name | highlight : searchTerm"></h4>
+            <div class="select-container">
+              <input
+                type="checkbox"
+                class="select-input"
+                (click)="toggleSelectItem(item.name)"
+              />
+              <span>Select</span>
+            </div>
           </div>
           <div class="cardinfo">
             <div class="info ms-4">
               <div class="mb-2">
                 <p class="header">Submitted on:</p>
-                <p>{{ item.date }}</p>
-                <!-- Interpolation -->
+                <p>{{ item.date | date : "MM/dd/yyyy" }}</p>
               </div>
               <div>
                 <p class="header">Duration:</p>
                 <p>{{ item.duration }}</p>
-                <!-- Interpolation -->
               </div>
               <div class="mt-2">
                 <p class="header">Salary:</p>
                 <p>{{ item.salary }}</p>
-                <!-- Interpolation -->
               </div>
             </div>
             <div
-              class="buttons d-flex flex-column-reverse justify-content-between mt-3 mx-4"
+              class="buttons d-flex flex-column-reverse justify-content-between mt-3 ms-4"
             >
-              <!-- Property binding to disable button if salary is 0 AED -->
               <button
                 class="btn btn-decline"
                 (click)="handleDecline(item.name)"
@@ -77,8 +81,8 @@
                 Decline
               </button>
               <button
+                *ngIf="parseSalary(item.salary) > 0"
                 class="btn btn-approve text-white"
-                [disabled]="item.salary === '0 AED'"
                 (click)="handleApprove(item.name)"
               >
                 Approve
@@ -90,16 +94,32 @@
     </div>
   </div>
 
+  <!-- Pagination -->
   <div class="page-navigation">
     <nav>
       <ul id="pagination" class="pagination">
+        <!-- Left arrow -->
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="goToPreviousPage()">&laquo;</a>
+        </li>
+
+        <!-- Pages (show only 3 pages) -->
         <li
-          *ngFor="let page of [].constructor(totalPages); let p = index"
+          *ngFor="let page of getDisplayedPages(); let i = index"
           class="page-item"
         >
-          <a href="#" class="page-link" (click)="loadPage(p + 1)">{{
-            p + 1
-          }}</a>
+          <a
+            class="page-link"
+            (click)="loadPage(page)"
+            [class.active]="page === currentPage"
+          >
+            {{ page }}
+          </a>
+        </li>
+
+        <!-- Right arrow -->
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="goToNextPage()">&raquo;</a>
         </li>
       </ul>
     </nav>

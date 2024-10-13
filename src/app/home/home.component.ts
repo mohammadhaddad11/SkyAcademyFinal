@@ -1,16 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DataService } from '../shared/data.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightDots } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { HighlightPipe } from '../highlight.pipe';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, FontAwesomeModule, HighlightPipe, CommonModule],
 })
 export class HomeComponent implements OnInit {
+  user = faUser;
+  arrowDots = faArrowUpRightDots;
+  MagnifyingGlass = faMagnifyingGlass;
+
   data: any[] = [];
+  searchTerm: string = '';
+  filteredData: any;
   constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
@@ -38,7 +51,7 @@ export class HomeComponent implements OnInit {
               <div class="info ms-4 mb-4">
                 <div class="mb-2">
                   <p class="header">Submitted on:</p>
-                  <p>${item.date}</p>
+                  <p>${new Date(item.date).toLocaleDateString('en-US')}</p>
                 </div>
                 <div>
                   <p class="header">Duration:</p>
@@ -66,7 +79,9 @@ export class HomeComponent implements OnInit {
     const filteredData = this.data.filter((item) =>
       item.name.toLowerCase().includes(searchTerm)
     );
+
     const firstThreeResults = filteredData.slice(0, 3);
+    this.filteredData = firstThreeResults; // لتفعيل خاصية الهايلات في HTML
     this.displayDataonlythree(firstThreeResults);
   }
 

@@ -530,7 +530,28 @@ img.me-2 {
   cursor: pointer;
 }
 
-.request .card.selected {
+.request .selected-card {
   background-color: #007bff9e; /* اللون الأزرق */
   color: white; /* لون النص داخل الكارد */
+}
+.highlighted {
+  background-color: #e0f7fa; /* لون خلفية النص المميز */
+  font-weight: bold; /* يمكنك أيضاً جعل النص غامقاً إذا أردت */
+  color: var(--Main-color); /* لون النص */
+}
+.request .select-container {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  top: 10px; /* Adjust to position it */
+  right: 10px; /* Adjust to position it */
+}
+
+.request .select-input {
+  width: 20px; /* Size of the checkbox */
+  height: 20px; /* Size of the checkbox */
+  margin-right: 5px; /* Space between checkbox and text */
+}
+.request .page-link {
+  cursor: pointer;
 }

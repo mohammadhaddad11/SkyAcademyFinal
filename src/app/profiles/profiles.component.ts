@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightDots } from '@fortawesome/free-solid-svg-icons';
 interface Vacation {
   name: string;
   date: string;
@@ -19,9 +22,11 @@ interface PendingData {
   templateUrl: './profiles.component.html',
   styleUrls: ['./profiles.component.css'],
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, FontAwesomeModule],
 })
 export class ProfilesComponent implements OnInit {
+  user = faUser;
+  arrowDots = faArrowUpRightDots;
   HistoryData: Vacation[] = [
     {
       name: 'Annual Vacation',
