@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit {
     );
 
     const firstThreeResults = filteredData.slice(0, 3);
-    this.filteredData = firstThreeResults; // لتفعيل خاصية الهايلات في HTML
+    this.filteredData = firstThreeResults;
     this.displayDataonlythree(firstThreeResults);
   }
 

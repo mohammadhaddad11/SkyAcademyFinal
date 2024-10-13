@@ -3,7 +3,7 @@ import { HomeComponent } from './home/home.component';
 import { ProfilesComponent } from './profiles/profiles.component';
 
 export const routes: Routes = [
-  { path: '', component: HomeComponent }, // الصفحة الرئيسية
+  { path: '', component: HomeComponent },
   {
     path: 'profiles',
     loadComponent: () =>

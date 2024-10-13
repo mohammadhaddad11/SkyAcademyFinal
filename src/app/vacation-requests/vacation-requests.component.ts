@@ -17,7 +17,7 @@ export class VacationRequests {
   searchTerm: string = '';
   MagnifyingGlass = faMagnifyingGlass;
   itemsPerPage: number = 6;
-  currentPage: number = 1; // Used for pagination display
+  currentPage: number = 1;
   selectedItems: Set<string> = new Set();
   data: any[] = [];
 
@@ -38,9 +38,9 @@ export class VacationRequests {
 
   toggleSelectAll() {
     if (this.selectedItems.size === this.filteredData().length) {
-      this.selectedItems.clear(); // إلغاء تحديد كل العناصر
+      this.selectedItems.clear();
     } else {
-      this.filteredData().forEach((item) => this.selectedItems.add(item.name)); // تحديد كل العناصر
+      this.filteredData().forEach((item) => this.selectedItems.add(item.name));
     }
   }
 
@@ -67,37 +67,31 @@ export class VacationRequests {
 
   toggleSelectItem(itemName: string) {
     if (this.selectedItems.has(itemName)) {
-      this.selectedItems.delete(itemName); // إذا كانت العنصر محددًا، قم بإزالته
+      this.selectedItems.delete(itemName);
     } else {
-      this.selectedItems.add(itemName); // إذا لم يكن محددًا، أضفه
+      this.selectedItems.add(itemName);
     }
   }
 
   parseSalary(salary: string): number {
-    return parseFloat(salary) || 0; // إذا كانت القيمة غير قابلة للتحويل إلى رقم، يتم إرجاع 0
+    return parseFloat(salary) || 0;
   }
 
-  // دالة لحساب الصفحات التي ستظهر (إظهار 3 صفحات في كل مرة)
   getDisplayedPages(): number[] {
-    const totalVisiblePages = 3; // عدد الصفحات المعروضة
+    const totalVisiblePages = 3;
     let startPage: number;
     let endPage: number;
 
-    // إذا كانت الصفحة الحالية قريبة من البداية، نعرض الصفحات الأولى
     if (this.currentPage <= Math.floor(totalVisiblePages / 2)) {
       startPage = 1;
       endPage = Math.min(totalVisiblePages, this.totalPages);
-    }
-    // إذا كانت الصفحة الحالية قريبة من النهاية، نعرض الصفحات الأخيرة
-    else if (
+    } else if (
       this.currentPage + Math.floor(totalVisiblePages / 2) >=
       this.totalPages
     ) {
       endPage = this.totalPages;
       startPage = Math.max(this.totalPages - totalVisiblePages + 1, 1);
-    }
-    // نعرض الصفحات من الوسط بناءً على الصفحة الحالية
-    else {
+    } else {
       startPage = this.currentPage - Math.floor(totalVisiblePages / 2);
       endPage = this.currentPage + Math.floor(totalVisiblePages / 2);
     }
@@ -109,21 +103,18 @@ export class VacationRequests {
     return pages;
   }
 
-  // تحميل صفحة معينة
   loadPage(page: number): void {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
   }
 
-  // الذهاب إلى الصفحة السابقة
   goToPreviousPage(): void {
     if (this.currentPage > 1) {
       this.loadPage(this.currentPage - 1);
     }
   }
 
-  // الذهاب إلى الصفحة التالية
   goToNextPage(): void {
     if (this.currentPage < this.totalPages) {
       this.loadPage(this.currentPage + 1);
